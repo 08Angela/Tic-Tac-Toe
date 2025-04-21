@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hall of Fame - Tic Tac Toe Champions</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Navigation bar -->
+  <nav>
+    <a href="index.html">Back to Start</a>
+    <a href="game.html">Another Round!</a>
+  </nav>
+
+  
+  <main class="center">
+    <h1>The Scoreboard of Legends</h1>
+    
+    <!-- Player X wins-->
+    <p class="score-display">
+      Player X Victories: <span id="scoreX" class="score-number">0</span>
+    </p>
+    
+    <!-- Player O wins -->
+    <p class="score-display">
+      Player O Victories: <span id="scoreO" class="score-number">0</span>
+    </p>
+    
+    <!-- draws -->
+    <p class="score-display">
+      Epic Standoffs (Draws): <span id="scoreDraws" class="score-number">0</span>
+    </p>
+
+    <!-- reset button -->
+    <button class="btn" onclick="resetScores()">Clear the Records</button>
+  </main>
+
+  <!-- js code for scoreboard -->
+  <script>
+    // Reveal the current standings
+    function updateScores() {
+      document.getElementById("scoreX").textContent = localStorage.getItem("scoreX") || 0;
+      document.getElementById("scoreO").textContent = localStorage.getItem("scoreO") || 0;
+      document.getElementById("scoreDraws").textContent = localStorage.getItem("scoreDraws") || 0;
+    }
+
+    // reset 
+    function resetScores() {
+      localStorage.removeItem("scoreX");
+      localStorage.removeItem("scoreO");
+      localStorage.removeItem("scoreDraws");
+      
+      // Update the display
+      updateScores();
+    }
+
+    // Show the current scores
+    updateScores();
+  </script>
+</body>
+</html>
