@@ -113,3 +113,81 @@ if (gameSquares.length > 0) {
   
   newGameButton.addEventListener('click', startNewGame);
 }
+
+// Adding Feature of Timer.
+
+let timer;
+let timeLeft = 5;
+
+function updateTimerDisplay() {
+  document.getElementById("time").textContent = timeLeft;
+}
+
+function startTurnTimer() {
+  clearInterval(timer); // Clear any existing timer
+  timeLeft = 10;
+  updateTimerDisplay();
+
+  timer = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      skipTurn(); // Skip the current player if time runs out
+    }
+  }, 1000);
+}
+
+function skipTurn() {
+  messageDisplay.textContent = `Player ${activePlayer}'s turn skipped!`;
+  activePlayer = activePlayer === "X" ? "O" : "X";
+  messageDisplay.textContent = `Player ${activePlayer}'s turn`;
+  startTurnTimer();
+}
+
+// UPDATED handleSquareClick function WITH TIMER
+function handleSquareClick(event) {
+  const squareIndex = event.target.getAttribute('data-index');
+
+  if (gameBoard[squareIndex] !== "" || !gameInProgress) return;
+
+  gameBoard[squareIndex] = activePlayer;
+  event.target.textContent = activePlayer;
+
+  if (checkForVictory()) {
+    messageDisplay.textContent = `Player ${activePlayer} wins! 🎉`;
+    recordVictory(activePlayer);
+    gameInProgress = false;
+    clearInterval(timer);
+  } else if (gameBoard.every(square => square !== "")) {
+    messageDisplay.textContent = "It's a draw!";
+    recordVictory("Draw");
+    gameInProgress = false;
+    clearInterval(timer);
+  } else {
+    activePlayer = activePlayer === "X" ? "O" : "X";
+    messageDisplay.textContent = `Player ${activePlayer}'s turn`;
+    startTurnTimer(); //Restart timer on a valid move
+  }
+}
+
+// Start new game + reset timer
+function startNewGame() {
+  gameBoard = ["", "", "", "", "", "", "", "", ""];
+  activePlayer = "X";
+  gameInProgress = true;
+  messageDisplay.textContent = `Player ${activePlayer}'s turn`;
+  gameSquares.forEach(square => square.textContent = "");
+  startTurnTimer(); // Restart timer
+}
+
+// Setup game
+if (gameSquares.length > 0) {
+  gameSquares.forEach(square => square.addEventListener('click', handleSquareClick));
+  newGameButton.addEventListener('click', startNewGame);
+}
+
+// Initial UI setup
+messageDisplay.textContent = `Player ${activePlayer}'s turn`;
+startTurnTimer();
